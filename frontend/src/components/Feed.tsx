@@ -15,8 +15,10 @@ interface Post {
     id: number
     username: string
     avatar_url?: string
+    avatar?: string
   }
   created_at: string
+  time_ago?: string
   like_count: number
   comment_count: number
   is_liked?: boolean
@@ -34,7 +36,10 @@ export default function Feed() {
   const fetchPosts = async () => {
     try {
       const response = await postsAPI.getFeed()
-      const apiPosts = response.data.results || response.data
+      const apiPosts = (response.data.results || response.data).map((post: any) => ({
+        ...post,
+        time_ago: 'Just now'
+      }))
       
       // Add some initial mock posts if no posts exist
       const mockPosts = [
