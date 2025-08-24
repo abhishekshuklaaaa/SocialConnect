@@ -31,7 +31,7 @@ interface AutoPostGeneratorProps {
 }
 
 export default function AutoPostGenerator({ onNewPost, silentMode }: AutoPostGeneratorProps) {
-  const { setUnreadCount } = useNotifications()
+  const { unreadCount, setUnreadCount } = useNotifications()
   const intervalRef = useRef<NodeJS.Timeout>()
 
   const generateRandomPost = () => {
@@ -61,7 +61,7 @@ export default function AutoPostGenerator({ onNewPost, silentMode }: AutoPostGen
       showToast(`${randomUser.username} posted: ${randomPost.content.substring(0, 30)}...`, 'info')
       
       // Update notification count
-      setUnreadCount((prev: number) => prev + 1)
+      setUnreadCount(unreadCount + 1)
     }
   }
 
