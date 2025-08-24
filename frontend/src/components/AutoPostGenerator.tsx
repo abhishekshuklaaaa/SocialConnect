@@ -58,7 +58,7 @@ export default function AutoPostGenerator({ onNewPost, silentMode }: AutoPostGen
 
     // Show notification if not in silent mode
     if (!silentMode) {
-      showToast(`${randomUser.username} posted: ${randomContent.substring(0, 30)}...`, 'info')
+      showToast(`${randomUser.username} posted: ${randomPost.content.substring(0, 30)}...`, 'info')
       
       // Update notification count
       setUnreadCount(prev => prev + 1)
