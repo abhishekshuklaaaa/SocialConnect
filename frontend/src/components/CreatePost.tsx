@@ -43,7 +43,7 @@ export default function CreatePost({ onClose }: CreatePostProps) {
         formData.append('image', image)
       }
       
-      const response = await postsAPI.createPost(formData)
+      const response = await postsAPI.create(formData)
       showToast('Post shared successfully! 🎉', 'success')
       // Reset form
       setContent('')
