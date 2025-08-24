@@ -61,7 +61,7 @@ export default function AutoPostGenerator({ onNewPost, silentMode }: AutoPostGen
       showToast(`${randomUser.username} posted: ${randomPost.content.substring(0, 30)}...`, 'info')
       
       // Update notification count
-      setUnreadCount(prev => prev + 1)
+      setUnreadCount((prev: number) => prev + 1)
     }
   }
 
