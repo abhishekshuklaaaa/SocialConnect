@@ -7,13 +7,22 @@ export const setAuthToken = (token: string) => {
 };
 
 const apiCall = async (endpoint: string, options: any = {}) => {
-  const headers: any = { 'Content-Type': 'application/json' };
+  const headers: any = {};
+  
+  // Only set Content-Type for JSON, let browser set it for FormData
+  if (!(options.body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
+  }
+  
   if (authToken) headers.Authorization = `Bearer ${authToken}`;
+  
+  // Merge with any headers passed in options
+  const finalHeaders = { ...headers, ...options.headers };
   
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      headers,
-      ...options
+      ...options,
+      headers: finalHeaders
     });
     
     if (!response.ok) {
@@ -42,7 +51,18 @@ export const authAPI = {
 export const postsAPI = {
   getPosts: () => apiCall('/api/posts/').then(data => ({ data: { results: data.results || data || [] } })),
   getFeed: () => apiCall('/api/posts/feed/').then(data => ({ data: { results: data.results || data || [] } })),
-  create: (data: any) => apiCall('/api/posts/', { method: 'POST', body: JSON.stringify(data) }),
+  create: (data: any) => {
+    // Handle FormData for file uploads
+    if (data instanceof FormData) {
+      return apiCall('/api/posts/', { 
+        method: 'POST', 
+        body: data,
+        headers: authToken ? { Authorization: `Bearer ${authToken}` } : {}
+      });
+    }
+    // Handle regular JSON data
+    return apiCall('/api/posts/', { method: 'POST', body: JSON.stringify(data) });
+  },
   createPost: (data: any) => apiCall('/api/posts/', { method: 'POST', body: JSON.stringify(data) }),
   deletePost: (id: string) => apiCall(`/api/posts/${id}/`, { method: 'DELETE' }),
   likePost: (id: string) => apiCall(`/api/posts/${id}/like/`, { method: 'POST' }),
