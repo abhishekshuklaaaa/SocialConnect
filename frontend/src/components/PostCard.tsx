@@ -161,7 +161,15 @@ export default function PostCard({ post, onLike, onDelete, onUserClick }: PostCa
       {/* Image */}
       {post.image_url && (
         <div className="w-full">
-          <img src={post.image_url} alt="Post" className="w-full h-auto" />
+          <img 
+            src={post.image_url} 
+            alt={`Post by ${post.author.username}`} 
+            className="w-full h-auto"
+            onError={(e) => {
+              console.log('Image failed to load:', post.image_url);
+              e.currentTarget.style.display = 'none';
+            }}
+          />
         </div>
       )}
 
