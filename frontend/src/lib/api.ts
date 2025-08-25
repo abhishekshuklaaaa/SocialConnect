@@ -34,17 +34,25 @@ export const authAPI = {
 };
 
 export const postsAPI = {
-  getFeed: () => apiCall('/api/posts/feed/'),
-  create: (data: any) => apiCall('/api/posts/', { method: 'POST', body: JSON.stringify(data) }),
-  like: (id: number) => apiCall(`/api/posts/${id}/like/`, { method: 'POST' }),
-  unlike: (id: number) => apiCall(`/api/posts/${id}/like/`, { method: 'DELETE' })
+  getPosts: () => apiCall('/api/posts/').then(data => ({ data })),
+  getFeed: () => apiCall('/api/posts/feed/').then(data => ({ data })),
+  createPost: (data: any) => apiCall('/api/posts/', { method: 'POST', body: JSON.stringify(data) }),
+  deletePost: (id: string) => apiCall(`/api/posts/${id}/`, { method: 'DELETE' }),
+  likePost: (id: string) => apiCall(`/api/posts/${id}/like/`, { method: 'POST' }),
+  unlikePost: (id: string) => apiCall(`/api/posts/${id}/like/`, { method: 'DELETE' }),
+  getComments: (id: string) => apiCall(`/api/posts/${id}/comments/`).then(data => ({ data })),
+  addComment: (id: string, data: any) => apiCall(`/api/posts/${id}/comments/`, { method: 'POST', body: JSON.stringify(data) }),
+  deleteComment: (id: string) => apiCall(`/api/posts/comments/${id}/`, { method: 'DELETE' })
 };
 
 export const usersAPI = {
-  search: (query: string) => apiCall(`/api/users/?search=${query}`),
-  getProfile: (id: number) => apiCall(`/api/users/${id}/`),
-  follow: (id: number) => apiCall(`/api/users/${id}/follow/`, { method: 'POST' }),
-  unfollow: (id: number) => apiCall(`/api/users/${id}/follow/`, { method: 'DELETE' })
+  searchUsers: (query: string) => apiCall(`/api/users/?search=${query}`).then(data => ({ data })),
+  getProfile: (id: string) => apiCall(`/api/users/${id}/`).then(data => ({ data })),
+  updateProfile: (data: any) => apiCall('/api/users/me/', { method: 'PUT', body: JSON.stringify(data) }),
+  followUser: (id: string) => apiCall(`/api/users/${id}/follow/`, { method: 'POST' }),
+  unfollowUser: (id: string) => apiCall(`/api/users/${id}/follow/`, { method: 'DELETE' }),
+  getFollowers: (id: string) => apiCall(`/api/users/${id}/followers/`).then(data => ({ data })),
+  getFollowing: (id: string) => apiCall(`/api/users/${id}/following/`).then(data => ({ data }))
 };
 
 export const api = {
