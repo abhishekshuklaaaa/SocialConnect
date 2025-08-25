@@ -16,7 +16,9 @@ const apiCall = async (endpoint: string, options: any = {}) => {
   });
   
   if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
+    const errorData = await response.text();
+    console.error('API Error:', response.status, errorData);
+    throw new Error(`HTTP ${response.status}: ${errorData}`);
   }
   
   return response.json();
@@ -34,9 +36,9 @@ export const authAPI = {
 };
 
 export const postsAPI = {
-  getPosts: () => apiCall('/api/posts/').then(data => ({ data })),
-  getFeed: () => apiCall('/api/posts/feed/').then(data => ({ data })),
-  createPost: (data: any) => apiCall('/api/posts/', { method: 'POST', body: JSON.stringify(data) }),
+  getPosts: () => apiCall('/api/posts/').then(data => ({ data: { results: data.results || data } })),
+  getFeed: () => apiCall('/api/posts/feed/').then(data => ({ data: { results: data.results || data || [] } })),
+  createPost: (data: any) => apiCall('/api/posts/', { method: 'POST', body: JSON.stringify(data) }).then(data => ({ data })),
   deletePost: (id: string) => apiCall(`/api/posts/${id}/`, { method: 'DELETE' }),
   likePost: (id: string) => apiCall(`/api/posts/${id}/like/`, { method: 'POST' }),
   unlikePost: (id: string) => apiCall(`/api/posts/${id}/like/`, { method: 'DELETE' }),
@@ -47,7 +49,7 @@ export const postsAPI = {
 
 export const usersAPI = {
   searchUsers: (query: string) => apiCall(`/api/users/?search=${query}`).then(data => ({ data })),
-  getProfile: (id: string) => apiCall(`/api/users/${id}/`).then(data => ({ data })),
+  getProfile: (id: string) => apiCall(`/api/users/${id}/`).then(data => ({ data: data || {} })),
   updateProfile: (data: any) => apiCall('/api/users/me/', { method: 'PUT', body: JSON.stringify(data) }),
   followUser: (id: string) => apiCall(`/api/users/${id}/follow/`, { method: 'POST' }),
   unfollowUser: (id: string) => apiCall(`/api/users/${id}/follow/`, { method: 'DELETE' }),
