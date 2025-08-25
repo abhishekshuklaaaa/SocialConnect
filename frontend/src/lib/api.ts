@@ -65,6 +65,8 @@ export const postsAPI = {
   },
   createPost: (data: any) => apiCall('/api/posts/', { method: 'POST', body: JSON.stringify(data) }),
   deletePost: (id: string) => apiCall(`/api/posts/${id}/`, { method: 'DELETE' }),
+  like: (id: string) => apiCall(`/api/posts/${id}/like/`, { method: 'POST' }),
+  unlike: (id: string) => apiCall(`/api/posts/${id}/like/`, { method: 'DELETE' }),
   likePost: (id: string) => apiCall(`/api/posts/${id}/like/`, { method: 'POST' }),
   unlikePost: (id: string) => apiCall(`/api/posts/${id}/like/`, { method: 'DELETE' }),
   getComments: (id: string) => apiCall(`/api/posts/${id}/comments/`).then(data => ({ data: data.results || data || [] })),
