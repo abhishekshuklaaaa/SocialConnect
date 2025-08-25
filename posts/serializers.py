@@ -22,9 +22,11 @@ class PostSerializer(serializers.ModelSerializer):
     
     def get_image_url(self, obj):
         if obj.image_url:
-            # Fix URLs that point to localhost:3000
-            if 'localhost:3000' in obj.image_url:
-                return obj.image_url.replace('http://localhost:3000', 'http://127.0.0.1:8000')
+            # Fix URLs to use Railway domain
+            if '127.0.0.1:8000' in obj.image_url:
+                return obj.image_url.replace('http://127.0.0.1:8000', 'https://web-production-19483.up.railway.app')
+            elif 'localhost' in obj.image_url:
+                return obj.image_url.replace('http://localhost:3000', 'https://web-production-19483.up.railway.app')
             return obj.image_url
         return None
     
@@ -74,7 +76,7 @@ class PostCreateSerializer(serializers.ModelSerializer):
                 for chunk in image.chunks():
                     destination.write(chunk)
                     
-            post.image_url = f'http://127.0.0.1:8000{settings.MEDIA_URL}{filename}'
+            post.image_url = f'https://web-production-19483.up.railway.app{settings.MEDIA_URL}{filename}'
             post.save()
             
         return post
