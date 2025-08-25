@@ -42,6 +42,7 @@ export const authAPI = {
 export const postsAPI = {
   getPosts: () => apiCall('/api/posts/').then(data => ({ data: { results: data.results || data || [] } })),
   getFeed: () => apiCall('/api/posts/feed/').then(data => ({ data: { results: data.results || data || [] } })),
+  create: (data: any) => apiCall('/api/posts/', { method: 'POST', body: JSON.stringify(data) }),
   createPost: (data: any) => apiCall('/api/posts/', { method: 'POST', body: JSON.stringify(data) }),
   deletePost: (id: string) => apiCall(`/api/posts/${id}/`, { method: 'DELETE' }),
   likePost: (id: string) => apiCall(`/api/posts/${id}/like/`, { method: 'POST' }),
