@@ -14,11 +14,22 @@ const apiCall = async (endpoint: string, options: any = {}) => {
     headers,
     ...options
   });
+  
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+  
   return response.json();
 };
 
 export const authAPI = {
-  login: (data: any) => apiCall('/api/auth/login/', { method: 'POST', body: JSON.stringify(data) }),
+  login: async (data: any) => {
+    const response = await apiCall('/api/auth/login/', { method: 'POST', body: JSON.stringify(data) });
+    if (response.access) {
+      setAuthToken(response.access);
+    }
+    return { data: response };
+  },
   register: (data: any) => apiCall('/api/auth/register/', { method: 'POST', body: JSON.stringify(data) })
 };
 
