@@ -13,6 +13,7 @@ users_data = [
     {'email': 'bob@demo.com', 'username': 'bob_demo', 'first_name': 'Bob', 'last_name': 'Smith', 'password': 'demo123'},
     {'email': 'test123@test.com', 'username': 'test123', 'first_name': 'Test', 'last_name': 'User', 'password': 'password123'},
     {'email': 'user@example.com', 'username': 'user123', 'first_name': 'John', 'last_name': 'Doe', 'password': '123456'},
+    {'email': 'sarah@example.com', 'username': 'sarah_wilson', 'first_name': 'Sarah', 'last_name': 'Wilson', 'password': 'sarah123'},
 ]
 
 for user_data in users_data:
