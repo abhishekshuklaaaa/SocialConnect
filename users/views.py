@@ -6,7 +6,6 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from .models import Follow
 from .serializers import UserSerializer, UserProfileUpdateSerializer, FollowSerializer
-from notifications.models import Notification
 
 User = get_user_model()
 
@@ -37,13 +36,6 @@ def follow_user(request, user_id):
         )
         
         if created:
-            # Create notification
-            Notification.objects.create(
-                recipient=user_to_follow,
-                sender=request.user,
-                notification_type='follow',
-                message=f'{request.user.username} started following you'
-            )
             return Response({"message": "Successfully followed user"}, status=status.HTTP_201_CREATED)
         else:
             return Response({"message": "Already following this user"}, status=status.HTTP_200_OK)

@@ -92,18 +92,18 @@ export default function Search({ query, onClearSearch }: SearchProps) {
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
         </div>
       ) : users.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
           No users found for "{query}"
         </div>
       ) : (
         <div className="space-y-4">
           {users.map((user) => (
-            <div key={user.id} className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200">
+            <div key={user.id} className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
               <button 
                 onClick={() => setSelectedUserId(user.id.toString())}
-                className="flex items-center space-x-3 flex-1 text-left hover:bg-gray-50 p-2 rounded"
+                className="flex items-center space-x-3 flex-1 text-left hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded"
               >
-                <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center">
                   {user.avatar_url ? (
                     <img src={user.avatar_url} alt="Avatar" className="w-12 h-12 rounded-full" />
                   ) : (
@@ -111,11 +111,11 @@ export default function Search({ query, onClearSearch }: SearchProps) {
                   )}
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">{user.username}</h3>
-                  <p className="text-sm text-gray-500">
+                  <h3 className="font-semibold text-gray-900 dark:text-white">{user.username}</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
                     {user.first_name} {user.last_name}
                   </p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-gray-400 dark:text-gray-500">
                     {user.followers_count} followers
                   </p>
                 </div>
@@ -124,7 +124,7 @@ export default function Search({ query, onClearSearch }: SearchProps) {
                 onClick={() => handleFollow(user.id, user.is_following || false)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium ${
                   user.is_following
-                    ? 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                    ? 'bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-500'
                     : 'bg-blue-500 text-white hover:bg-blue-600'
                 }`}
               >

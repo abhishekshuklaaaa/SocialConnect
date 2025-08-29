@@ -8,7 +8,7 @@ def sync_to_supabase(notification):
         supabase_key = getattr(settings, 'SUPABASE_SERVICE_KEY', None)
         
         if not supabase_url or not supabase_key:
-            print("Supabase credentials not configured")
+            print("Supabase credentials not configured - skipping sync")
             return
             
         url = f"{supabase_url}/rest/v1/notifications_notification"
@@ -29,11 +29,13 @@ def sync_to_supabase(notification):
             'created_at': notification.created_at.isoformat()
         }
         
-        response = requests.post(url, json=data, headers=headers, timeout=10)
+        response = requests.post(url, json=data, headers=headers, timeout=5)
         if response.status_code in [200, 201]:
             print(f"SUCCESS: Notification synced to Supabase: {notification.notification_type}")
         else:
-            print(f"ERROR: Supabase sync failed: {response.status_code} - {response.text}")
+            print(f"WARNING: Supabase sync failed: {response.status_code} - {response.text}")
         
+    except requests.exceptions.RequestException as e:
+        print(f"WARNING: Supabase sync network error: {e}")
     except Exception as e:
-        print(f"ERROR: Supabase sync error: {e}")
+        print(f"WARNING: Supabase sync error: {e}")

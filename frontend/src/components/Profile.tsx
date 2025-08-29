@@ -403,8 +403,24 @@ export default function Profile({ userId }: ProfileProps = {}) {
               </div>
               <PostCard 
                 post={selectedPost} 
-                onLike={(postId, isLiked) => {
-                  // Handle like logic here if needed
+                onLike={async (postId, isLiked) => {
+                  try {
+                    if (isLiked) {
+                      await postsAPI.unlike(postId.toString())
+                    } else {
+                      await postsAPI.like(postId.toString())
+                    }
+                    // Update the post in the modal and grid
+                    const updatedPost = {
+                      ...selectedPost,
+                      is_liked: !isLiked,
+                      like_count: isLiked ? selectedPost.like_count - 1 : selectedPost.like_count + 1
+                    }
+                    setSelectedPost(updatedPost)
+                    setUserPosts(userPosts.map(p => p.id === postId ? updatedPost : p))
+                  } catch (error) {
+                    console.error('Error toggling like:', error)
+                  }
                 }}
                 onDelete={(postId) => {
                   setUserPosts(userPosts.filter(p => p.id !== postId))

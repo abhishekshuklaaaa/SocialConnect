@@ -1,6 +1,8 @@
 'use client'
 
-import { createContext, useContext, useState, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { supabase } from '@/lib/supabase'
+import { useAuth } from './AuthProvider'
 
 interface Notification {
   id: number
@@ -25,6 +27,33 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 export function NotificationProvider({ children }: { children: ReactNode }) {
   const [unreadCount, setUnreadCount] = useState(0)
   const [notifications, setNotifications] = useState<Notification[]>([])
+  const { user } = useAuth()
+
+  useEffect(() => {
+    if (!user) return
+
+    // Subscribe to real-time notifications
+    const channel = supabase
+      .channel('notifications')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications_notification',
+          filter: `recipient_id=eq.${user.id}`
+        },
+        (payload) => {
+          console.log('New notification received:', payload.new)
+          addNotification(payload.new as Notification)
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [user])
 
   const addNotification = (notification: Notification) => {
     setNotifications(prev => {
